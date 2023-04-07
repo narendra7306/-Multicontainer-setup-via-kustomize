@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: app-deployment
+  labels:
+    run: app-deployment
+  
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      env: dev
+  template:
+    metadata:
+        name: nginx-pod
+        labels:
+          env: dev
+    spec:
+      containers:
+         - image: nginx
+           name: nginx-app1
+           ports:
+             - containerPort: 8085
+           volumeMounts:
+            - name: vol1
+              mountPath: "/usr/share/nginx/html/"
+            - name: vol8085
+              mountPath: "/etc/nginx/conf.d"
+              readOnly: true
+           
+
+         - image: nginx
+           name: nginx-app2
+           ports:
+             - containerPort: 8089
+           volumeMounts:
+            - name: vol2
+              mountPath: "/usr/share/nginx/html/"
+            - name: vol8089
+              mountPath: "/etc/nginx/conf.d"
+              readOnly: true
+      volumes:
+         - name: vol1
+           configMap:
+             name: nginx-app1-cm
+         - name: vol2
+           configMap:
+             name: nginx-app2-cm
+         - name: vol8085
+           configMap:
+             name: nginx-conf-8085
+         - name: vol8089
+           configMap:
+             name: nginx-conf-8089
+
+            
+
+
+
+           
+         
+         
